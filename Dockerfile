@@ -36,51 +36,42 @@ ENV UV_LINK_MODE=copy
 # ---------------------------------------------------------------------------- #
 RUN uv venv /opt/venv-cosmos
 
+COPY requirements-cosmos.txt /tmp/requirements-cosmos.txt
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --python /opt/venv-cosmos/bin/python \
-        "vllm>=0.11.0" \
-        "transformers>=4.57.0" \
-        "accelerate" \
-        "huggingface_hub[cli]"
+        -r /tmp/requirements-cosmos.txt
 
 # ---------------------------------------------------------------------------- #
 # gpt-oss venv — vllm==0.10.1+gptoss custom fork required by openai/gpt-oss   #
 # ---------------------------------------------------------------------------- #
 RUN uv venv /opt/venv-gptoss
 
-# Install torch from nightly cu128 first (required by gptoss vllm fork)
+COPY requirements-gptoss.txt /tmp/requirements-gptoss.txt
+
+# torch must be installed first from the nightly cu128 index
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --python /opt/venv-gptoss/bin/python \
         torch \
         --index-url https://download.pytorch.org/whl/nightly/cu128
 
+# Install remaining deps including the custom gptoss vLLM wheel
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --python /opt/venv-gptoss/bin/python \
-        transformers \
-        kernels
-
-# Install the gpt-oss custom vllm wheel
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --python /opt/venv-gptoss/bin/python \
-        --pre "vllm==0.10.1+gptoss" \
+        --pre \
         --extra-index-url https://wheels.vllm.ai/gpt-oss/ \
         --extra-index-url https://download.pytorch.org/whl/nightly/cu128 \
-        --index-strategy unsafe-best-match
-
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv pip install --python /opt/venv-gptoss/bin/python \
-        "huggingface_hub[cli]"
+        --index-strategy unsafe-best-match \
+        -r /tmp/requirements-gptoss.txt
 
 # ---------------------------------------------------------------------------- #
 # proxy venv — FastAPI router on port 8000                                     #
 # ---------------------------------------------------------------------------- #
 RUN uv venv /opt/venv-proxy
 
+COPY proxy/requirements.txt /tmp/requirements-proxy.txt
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv pip install --python /opt/venv-proxy/bin/python \
-        "fastapi" \
-        "uvicorn[standard]" \
-        "httpx"
+        -r /tmp/requirements-proxy.txt
 
 # ---------------------------------------------------------------------------- #
 # Environment                                                                   #
