@@ -54,7 +54,6 @@ RUN /opt/venv-gptoss/bin/pip install --no-cache-dir \
         --pre \
         --extra-index-url https://wheels.vllm.ai/gpt-oss/ \
         --extra-index-url https://download.pytorch.org/whl/nightly/cu128 \
-        --index-strategy unsafe-best-match \
         -r /tmp/requirements-gptoss.txt
 
 # ---------------------------------------------------------------------------- #
