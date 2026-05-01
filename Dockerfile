@@ -44,7 +44,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 # ---------------------------------------------------------------------------- #
 # gpt-oss venv — vllm==0.10.1+gptoss custom fork required by openai/gpt-oss   #
 # ---------------------------------------------------------------------------- #
-RUN uv venv /opt/venv-gptoss
+RUN uv venv --seed /opt/venv-gptoss
 
 COPY requirements-gptoss.txt /tmp/requirements-gptoss.txt
 
