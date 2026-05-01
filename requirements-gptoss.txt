@@ -1,10 +1,7 @@
 # gpt-oss-20b inference dependencies
 # Requires the custom gptoss vLLM fork — NOT compatible with the cosmos venv.
-# torch must be installed first from the nightly cu128 index before this file.
-#
-# Install order (see Dockerfile):
-#   1. torch  --index-url https://download.pytorch.org/whl/nightly/cu128
-#   2. uv pip install -r requirements-gptoss.txt (flags below handled in Dockerfile)
+# Installed via pip (not uv) to avoid cache-mount I/O failures on large CUDA wheels.
+# torch is pulled automatically as a vllm dependency from the nightly cu128 index.
 #
 # vllm wheel source: https://wheels.vllm.ai/gpt-oss/
 transformers>=4.57.0
