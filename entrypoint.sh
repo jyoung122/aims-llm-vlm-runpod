@@ -49,11 +49,11 @@ echo "[download] Fetching $GPTOSS_MODEL ..."
 # Start backends                                                                #
 # ---------------------------------------------------------------------------- #
 echo "[start] cosmos vLLM on port $COSMOS_PORT ..."
-/workspace/scripts/serve_cosmos.sh &
+HF_DOWNLOAD=0 /workspace/scripts/serve_cosmos.sh &
 COSMOS_PID=$!
 
 echo "[start] gpt-oss vLLM on port $GPTOSS_PORT ..."
-/workspace/scripts/serve_gptoss.sh &
+HF_DOWNLOAD=0 /workspace/scripts/serve_gptoss.sh &
 GPTOSS_PID=$!
 
 # ---------------------------------------------------------------------------- #

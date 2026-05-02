@@ -48,12 +48,16 @@ RUN uv venv --seed /opt/venv-gptoss
 
 COPY requirements-gptoss.txt /tmp/requirements-gptoss.txt
 
-# Use pip directly (not uv) for the gptoss venv — avoids uv cache-mount I/O
-# failures on large CUDA wheels, and lets the vllm fork pull its own torch.
-RUN /opt/venv-gptoss/bin/pip install --no-cache-dir \
+# Use uv (not pip) so --index-strategy unsafe-best-match is available — required
+# because vllm==0.10.1+gptoss pins a specific torch nightly that only exists on
+# the gptoss wheel index, not PyPI. --no-cache avoids cache-mount I/O failures
+# on large CUDA wheels.
+RUN uv pip install --python /opt/venv-gptoss/bin/python \
+        --no-cache \
         --pre \
         --extra-index-url https://wheels.vllm.ai/gpt-oss/ \
         --extra-index-url https://download.pytorch.org/whl/nightly/cu128 \
+        --index-strategy unsafe-best-match \
         -r /tmp/requirements-gptoss.txt
 
 # ---------------------------------------------------------------------------- #
