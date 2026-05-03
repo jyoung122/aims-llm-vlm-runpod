@@ -29,21 +29,29 @@ echo "======================================================"
 mkdir -p "$HF_HOME"
 
 # ---------------------------------------------------------------------------- #
-# HuggingFace auth                                                              #
+# Hugging Face CLI                                                             #
 # ---------------------------------------------------------------------------- #
-if [ -n "${HF_TOKEN:-}" ]; then
-    echo "[auth] Logging in to HuggingFace..."
-    /opt/venv-cosmos/bin/huggingface-cli login --token "$HF_TOKEN" --add-to-git-credential
+HF_COSMOS_BIN="${HF_COSMOS_BIN:-/opt/venv-cosmos/bin/hf}"
+HF_GPTOSS_BIN="${HF_GPTOSS_BIN:-/opt/venv-gptoss/bin/hf}"
+
+if [ ! -x "$HF_COSMOS_BIN" ]; then
+    echo "[error] Hugging Face CLI not found at $HF_COSMOS_BIN"
+    exit 1
+fi
+
+if [ ! -x "$HF_GPTOSS_BIN" ]; then
+    echo "[error] Hugging Face CLI not found at $HF_GPTOSS_BIN"
+    exit 1
 fi
 
 # ---------------------------------------------------------------------------- #
 # Download models (skips files already cached)                                  #
 # ---------------------------------------------------------------------------- #
 echo "[download] Fetching $COSMOS_MODEL ..."
-/opt/venv-cosmos/bin/huggingface-cli download "$COSMOS_MODEL"
+"$HF_COSMOS_BIN" download "$COSMOS_MODEL"
 
 echo "[download] Fetching $GPTOSS_MODEL ..."
-/opt/venv-gptoss/bin/huggingface-cli download "$GPTOSS_MODEL"
+"$HF_GPTOSS_BIN" download "$GPTOSS_MODEL"
 
 # ---------------------------------------------------------------------------- #
 # Start backends                                                                #

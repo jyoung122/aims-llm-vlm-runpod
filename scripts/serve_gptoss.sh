@@ -18,7 +18,7 @@ mkdir -p "$HF_HOME"
 
 if [ "$HF_DOWNLOAD" != "0" ]; then
     echo "[download] Fetching $GPTOSS_MODEL from Hugging Face..."
-    huggingface-cli download "$GPTOSS_MODEL"
+    hf download "$GPTOSS_MODEL"
 fi
 
 exec vllm serve "$GPTOSS_MODEL" \

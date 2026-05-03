@@ -54,6 +54,8 @@ RUN uv pip install --python /opt/venv-gptoss/bin/python \
         --torch-backend=auto \
         -r /tmp/requirements-gptoss.txt
 
+RUN test -x /opt/venv-cosmos/bin/hf && test -x /opt/venv-gptoss/bin/hf
+
 # ---------------------------------------------------------------------------- #
 # proxy venv — FastAPI router on port 8000                                     #
 # ---------------------------------------------------------------------------- #

@@ -19,7 +19,7 @@ mkdir -p "$HF_HOME"
 
 if [ "$HF_DOWNLOAD" != "0" ]; then
     echo "[download] Fetching $COSMOS_MODEL from Hugging Face..."
-    huggingface-cli download "$COSMOS_MODEL"
+    hf download "$COSMOS_MODEL"
 fi
 
 exec vllm serve "$COSMOS_MODEL" \
