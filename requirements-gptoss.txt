@@ -1,10 +1,7 @@
 # gpt-oss-20b inference dependencies
-# Requires the custom gptoss vLLM fork — NOT compatible with the cosmos venv.
-# Installed via pip (not uv) to avoid cache-mount I/O failures on large CUDA wheels.
-# torch is pulled automatically as a vllm dependency from the nightly cu128 index.
-#
-# vllm wheel source: https://wheels.vllm.ai/gpt-oss/
+# vLLM's current official release supports gpt-oss; the older
+# vllm==0.10.1+gptoss fork pins a torch nightly that is no longer published.
 transformers>=4.57.0
 kernels
-vllm==0.10.1+gptoss
+vllm>=0.17.0
 huggingface_hub[cli]>=0.23.0

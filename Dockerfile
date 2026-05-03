@@ -42,22 +42,16 @@ RUN --mount=type=cache,target=/root/.cache/uv \
         -r /tmp/requirements-cosmos.txt
 
 # ---------------------------------------------------------------------------- #
-# gpt-oss venv — vllm==0.10.1+gptoss custom fork required by openai/gpt-oss   #
+# gpt-oss venv — current vLLM release with GPT-OSS support                   #
 # ---------------------------------------------------------------------------- #
 RUN uv venv --seed /opt/venv-gptoss
 
 COPY requirements-gptoss.txt /tmp/requirements-gptoss.txt
 
-# Use uv (not pip) so --index-strategy unsafe-best-match is available — required
-# because vllm==0.10.1+gptoss pins a specific torch nightly that only exists on
-# the gptoss wheel index, not PyPI. --no-cache avoids cache-mount I/O failures
-# on large CUDA wheels.
+# Use uv's torch backend resolver so vLLM gets a CUDA-compatible torch build.
 RUN uv pip install --python /opt/venv-gptoss/bin/python \
         --no-cache \
-        --pre \
-        --extra-index-url https://wheels.vllm.ai/gpt-oss/ \
-        --extra-index-url https://download.pytorch.org/whl/nightly/cu128 \
-        --index-strategy unsafe-best-match \
+        --torch-backend=auto \
         -r /tmp/requirements-gptoss.txt
 
 # ---------------------------------------------------------------------------- #
